@@ -1,0 +1,163 @@
+#!/usr/bin/perl
+# maybe use warnings FATAL => 'all';
+
+# TODO
+# * add errout()
+# * create tests which could fix dumb errors
+
+use Modern::Perl'2014';our$VERSION='v0.1.4';package ConvertWiki{use Carp;use Data::Dumper;use Hash::Util qw(lock_keys);our$VAR1;my$DEBUG=0;
+
+my @keys = qw( argv switches wiki_input mmd_input input_file );
+
+sub run {
+    my ( $self, @argv ) = @_;
+
+    $self->{argv} = \@argv;
+
+    $self->check_inputs();
+
+    $self->convert_wiki();
+    return 0; # return for entire script template
+}
+
+sub check_inputs {
+    my ($self) = @_;
+    my %valid_switch = (
+        '-w' => 'wiki_input',
+        '-m' => 'mmd_input',
+    );
+    while (my $arg = shift(@{$self->{argv}})) {
+        if ( $arg =~ /^(-.*)/ ) {
+            my $switch = $1;
+            if ( $switch eq '-?' or $switch eq '-h' or $switch eq '--help' )  {
+                 print STDERR $self->usage();
+                 exit 2;
+            }
+            if ( !$valid_switch{$switch} )  {
+                $self->errout("bad switch $switch");
+            }
+            $self->{$valid_switch{$switch}}++;
+        }
+        else {
+            if ( @{$self->{argv}} > 0 )  {
+                $self->errout(message=>"too many input files", no_usage => 1);
+            }
+            if ( ! -r $arg ) {
+                $self->errout(message=>"can't read file \"$arg\"", no_usage => 1);
+            }
+            $self->{input_file} = $arg;
+            last;
+        }
+    }
+    if (( !$self->{wiki_input} and !$self->{mmd_input} ) or
+        ( $self->{wiki_input} and $self->{mmd_input} )) {
+        $self->errout("must use either -w or -m");
+    }
+}
+
+sub convert_wiki {
+    my ($self) = @_;
+
+    my $ifh = IO::File->new($0, '<');
+    die if (!defined $ifh);
+
+    while(<$ifh>) {
+        chomp;
+        print "*** l: $_\n";
+        last;
+    }
+    $ifh->close;
+
+    print "*** convert_wiki\n";
+}
+
+sub usage {
+    my ($self) = @_;
+
+    return <<EOF;
+Usage: convert_wiki [OPTION] [FILE]
+Convert from Wiki to MultiMarkdown and vice-versa
+Example: convert_wiki -w menu.wiki
+
+  -w input file is Wiki markup
+  -m input file is MultiMarkdown
+EOF
+}
+
+sub errout {
+    my $self = shift;
+    my %params;
+    if ( @_ == 1 ) {
+        $params{message} = $_[0];
+    }
+    else {
+        %params = @_;
+    }
+    my $message = "error: $params{message}\n";
+    if ( !$params{no_usage} ) {
+        $message .= $self->usage();
+    }
+    die $message;
+}
+
+# ================== END MAIN =================================================
+
+    sub new {
+        my ($class) = @_;
+
+        my $self = {};
+        bless $self, $class;
+        lock_keys( %$self, @keys );
+
+        return $self;
+    }
+
+    sub thaw {
+        my ( $self, $filename ) = @_;
+        if ( !ref($self) ) {
+            $filename = $self;
+        }
+
+        my $ifh = IO::File->new( $filename, '<' );
+        return if ( !defined $ifh );
+
+        my $contents = do { local $/; <$ifh> };
+        $ifh->close;
+
+        return eval $contents;
+    }
+
+    sub freeze {
+        my ( $self, $filename, $ref ) = @_;
+
+        my $ofh = IO::File->new( $filename, '>' );
+        croak "Failed to open output file: $!" if ( !defined $ofh );
+
+        print $ofh Dumper($ref);
+        $ofh->close;
+    }
+
+}
+
+package main;
+
+my $app = ConvertWiki->new();
+exit $app->run(@ARGV);
+
+=head
+
+= words words words =     ------>   # words words words #
+== words words words ==   ------>   ## words words words ##
+
+  ||= words words words =||= words words words =||= words words words =||
+  || words words words   ||  words words words  || words words words   ||
+
+                          ------>
+
+  words words words | words words words  | words words words
+  ----------------- | ------------------ | -----------------
+  words words words |  words words words | words words words
+
+  NOTES: avoid code, look for indent > 4 spaces
+  otherwise $a == $b might trigger something
+
