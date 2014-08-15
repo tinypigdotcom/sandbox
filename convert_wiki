@@ -16,7 +16,12 @@ sub run {
 
     $self->check_inputs();
 
-    $self->convert_wiki();
+    if ( $self->{wiki_input} ) {
+        $self->convert_from_wiki();
+    }
+    else {
+        $self->convert_from_mmd();
+    }
     return 0; # return for entire script template
 }
 
@@ -55,20 +60,75 @@ sub check_inputs {
     }
 }
 
-sub convert_wiki {
+sub convert_from_wiki {
     my ($self) = @_;
 
-    my $ifh = IO::File->new($0, '<');
+    my $ifh = IO::File->new($self->{input_file}, '<');
+    die if (!defined $ifh);
+
+    while(my $line = <$ifh>) {
+        my $after = '';
+        chomp $line;
+        if ( $line =~ /^    / ) {
+            $after = $line;
+        }
+        elsif ( $line =~ /^(\s*)(=+)([^=]+)(=+)(\s*)$/ ) {
+            my $start_space  = $1;
+            my $start_header = $2;
+            my $header       = $3;
+            my $end_header   = $4;
+            my $end_space    = $5;
+            for ( $start_header, $end_header ) {
+                s/=/#/g;
+            }
+            $after = "$start_space$start_header$header$end_header$end_space";
+#            print "1: $line\n";
+#            print "2: $after\n";
+        }
+        elsif ( $line =~ /^(\s*)\|\|=?(\s+.*\s+)=?\|\|(\s*)$/ ) {
+            my $start_space  = $1;
+            my $content      = $2;
+            my $end_space    = $3;
+            $content =~ s/=?\|\|=?/|/g;
+            my $nextline = '';
+            if ( $line =~ /=\|/ or $line =~ /\|=/ ) {
+                my $title = "$start_space$content$end_space";
+                my $undertitle = $title;
+                $undertitle =~ s/ \| /- | -/g;
+                $undertitle =~ s/[^\s|]/-/g;
+                $after .= "$title\n$undertitle";
+            }
+            else {
+                $after = "$start_space$content$end_space$nextline";
+            }
+#            print "|1: $line\n";
+#            print "|2: $after\n";
+#(vim_please_jump_to_this_location
+#  ||= words words words =||= words words words =||= words words words =||
+#  || words words words   ||  words words words  || words words words   ||
+#  words words words | words words words  | words words words
+#  ----------------- | ------------------ | -----------------
+#  words words words |  words words words | words words words
+        }
+        else {
+            $after = $line;
+        }
+        print "$after\n";
+    }
+    $ifh->close;
+}
+
+sub convert_from_mmd {
+    my ($self) = @_;
+
+    my $ifh = IO::File->new($self->{input_file}, '<');
     die if (!defined $ifh);
 
     while(<$ifh>) {
         chomp;
         print "*** l: $_\n";
-        last;
     }
     $ifh->close;
-
-    print "*** convert_wiki\n";
 }
 
 sub usage {
@@ -151,9 +211,6 @@ exit $app->run(@ARGV);
 
   ||= words words words =||= words words words =||= words words words =||
   || words words words   ||  words words words  || words words words   ||
-
-                          ------>
-
   words words words | words words words  | words words words
   ----------------- | ------------------ | -----------------
   words words words |  words words words | words words words
