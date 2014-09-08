@@ -5,6 +5,9 @@ use autodie;
 
 use Math::Random::Secure qw(irand);
 
+local *STDERR;
+open (STDERR, '>', '/dev/null');
+
 sub single {
     return irand(shift)+1;
 }
