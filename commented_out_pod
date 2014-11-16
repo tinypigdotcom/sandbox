@@ -1,0 +1,45 @@
+run with this:
+
+sed -e "s/.//" a.dmb >/tmp/a.pod.$$ | perldoc /tmp/a.pod.$$
+
+## Dave's Project / File Manager
+#
+#=head1 SYNOPSIS
+#
+#    $ p d "My Vimfiles" # create a new project with shortcut "d" called "My Vimfiles"
+#    $ x t                   # execute command assigned to shortcut "t"
+#    t/DMB.t .. ok
+#    Result: PASS
+#
+#Note: if the set of files changes you will need to run C<v> again.
+#
+#=head1 DESCRIPTION
+#
+#Dave's Project / File Manager is designed to make managing sets of files easier. Files can be grouped into projects and then each file can be edited with a simple command: f [space][letter representing file] [ENTER]
+#
+#=head1 INSTALLATION
+#
+#Put "p" in your C<$PATH> and then create these links to p in the same directory:
+#
+#  zdir  # get directory of file
+#
+#Separate scripts, put somewhere in C<$PATH>
+#
+#  v     # set shell variables for file shortcuts
+#
+#Add the following lines to your C<.bash_profile>:
+#
+#  alias d='. d'
+#  alias v='. v'
+#
+#=head1 AUTHOR
+#
+#David M. Bradford, E<lt>davembradford@gmail.comE<gt>
+#
+#Copyright (C) 2014 David M. Bradford
+#
+#=cut
+#
+#blah
+
+
