@@ -18,12 +18,18 @@ sub errout {
 }
 
 
+use strict;
+sub foo {
+    print "I am foo.";
+}
+
 # legitimate comment
 print "Source code goes here.\n";
 for (1..3) {
     print "$_\n";
 }
 print "Done!\n";
+foo();
 
 
 

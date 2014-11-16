@@ -1,6 +1,5 @@
-run with this:
-
-sed -e "s/.//" a.dmb >/tmp/a.pod.$$ | perldoc /tmp/a.pod.$$
+# to allow pod in a shell script.  run with this:
+# sed -e "s/.//" a.dmb >/tmp/a.pod.$$ | perldoc /tmp/a.pod.$$
 
 ## Dave's Project / File Manager
 #

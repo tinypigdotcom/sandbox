@@ -58,7 +58,3 @@ die if (!defined $ofh);
 print $ofh "$result\n";
 $ofh->close;
 
-exit;
-die;
-die;
-die;
