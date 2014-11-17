@@ -25,7 +25,9 @@ sub dump_read {
         chomp;
         next if /^#!.*perl/;
         s/^#\s*<-\s*//;
-        $contents .= "$_\n";
+        if ( !/\s*#->$/ ) {
+            $contents .= "$_\n";
+        }
     }
     $ifh->close;
 

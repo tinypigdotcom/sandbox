@@ -30,30 +30,38 @@ sub errout {
     exit $ERR_EXIT;
 }
 
-[
-my $sl=0;
+[< $sl=0;
+unshift @options,
+{
+    long_switch => 'help',
+    short_desc  => 'help',
+    long_desc   => 'display this help text and exit',
+},
+{
+    long_switch => 'version',
+    short_desc  => 'version',
+    long_desc   => 'display version information and exit',
+};
 for (@options) {
     my $len = length $_->{short_desc};
     $sl = $len if $len > $sl;
-}
-
-for (@options) {
-    my $ff = substr $_->{long_switch}, 0, 1;
-    printf " %3s, --%-${sl}s $_->{long_desc}\n", "-$ff", $_->{short_desc};
-}
-]
-
+} >]
 
 sub usage {
     usage_top();
     warn <<EOF;
-Edit work log
+[< $purpose >]
 Example: elog --backdate=3
 
-  -h, --help                display this help text and exit
-  -v, --version             display version information and exit
-  -y, --yesterday           edit yesterday's data instead of today's
-  -b, --backdate=#DAYS      edit # days ago instead of today
+[<
+for (@options) {
+    my $ff = substr $_->{long_switch}, 0, 1;
+    $_->{one_key} = $ff;
+    $_->{varname} = $_->{long_switch};
+    $_->{varname} =~ s/\W.*//; # turn backdate=i into backdate
+    $OUT .= sprintf(" %3s, --%-${sl}s $_->{long_desc}\n", "-$ff", $_->{short_desc});
+}
+>]
 EOF
     return;
 }
@@ -68,19 +76,19 @@ sub version {
     return;
 }
 
-my $backdate  =  0;
-my $h         =  0;
-my $help      =  0;
-my $version   =  0;
-my $yesterday =  0;
+my $h       = 0;
+my $help    = 0;
+my $version = 0;
+[< $INIT >]
 
 Getopt::Long::Configure ("bundling");
 
 my %options = (
-    "backdate=i"  => \$backdate,
-    "help"        => \$help,
-    "version"     => \$version,
-    "yesterday"   => \$yesterday,
+[<
+for (@options) {
+    $OUT .= sprintf("    \"%-${sl}s => \\\$$_->{varname},\n", "$_->{long_switch}\"");
+}
+>]
 );
 
 # Explicitly add single letter version of each option to allow bundling

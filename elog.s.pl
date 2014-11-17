@@ -1,7 +1,4 @@
 #!/usr/bin/perl
-# purpose: edit work log
-
-#!/usr/bin/perl
 # <- my $code = <<'END_OF_CODE';
 
 use 5.16.0;
@@ -15,8 +12,10 @@ use File::Basename;
 use Getopt::Long;
 use IO::File;
 
-my $yesterday;
-my $backdate;
+#pre
+my $yesterday; #->
+my $backdate;  #->
+#post
 
 if ( $yesterday ) {
     $backdate = 1;
@@ -175,11 +174,16 @@ for my $line ( @lines ) {
 $ifh->close;
 
 # <- END_OF_CODE
+# <- my $init = <<'END_OF_INIT';
+# <- my $yesterday = 0;
+# <- my $backdate  = 0;
+# <- END_OF_INIT
 
 # <- $VAR1 = {
 # <-     VERSION => '1.04',
 # <-     purpose => 'edit work log',
 # <-     CODE    => $code,
+# <-     INIT    => $init,
 # <-     options => [
 # <-         {
 # <-             long_switch => 'backdate=i',
