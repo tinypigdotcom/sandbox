@@ -174,26 +174,22 @@ for my $line ( @lines ) {
 $ifh->close;
 
 # <- END_OF_CODE
-# <- my $init = <<'END_OF_INIT';
-# <- my $yesterday = 0;
-# <- my $backdate  = 0;
-# <- END_OF_INIT
-
 # <- $VAR1 = {
 # <-     VERSION => '1.04',
 # <-     purpose => 'edit work log',
 # <-     CODE    => $code,
-# <-     INIT    => $init,
 # <-     options => [
 # <-         {
 # <-             long_switch => 'backdate=i',
 # <-             short_desc  => 'backdate=#DAYS',
 # <-             long_desc   => 'edit # days ago instead of today',
+# <-             init        => '0',
 # <-         },
 # <-         {
 # <-             long_switch => 'yesterday',
 # <-             short_desc  => 'yesterday',
 # <-             long_desc   => "edit yesterday's data instead of today's",
+# <-             init        => '0',
 # <-         },
 # <-     ],
 # <- };
