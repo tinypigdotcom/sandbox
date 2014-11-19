@@ -38,16 +38,4 @@ f $key ${file[$index]}
 # <-     CODE    => $code,
 # <-     INIT    => $init,
 # <-     target  => "$ENV{HOME}/bin/af",
-# <-     options => [
-# <-         {
-# <-             long_switch => 'backdate:',
-# <-             short_desc  => 'backdate=#DAYS',
-# <-             long_desc   => 'edit # days ago instead of today',
-# <-         },
-# <-         {
-# <-             long_switch => 'yesterday',
-# <-             short_desc  => 'yesterday',
-# <-             long_desc   => "edit yesterday's data instead of today's",
-# <-         },
-# <-     ],
 # <- };
