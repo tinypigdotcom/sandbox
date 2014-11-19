@@ -26,7 +26,6 @@ echo -n "f "
 read key index
 
 f $key ${file[$index]}
-
 # <- END_OF_CODE
 # <- my $init = <<'END_OF_INIT';
 # <- OPT_yesterday=0;
@@ -52,4 +51,3 @@ f $key ${file[$index]}
 # <-         },
 # <-     ],
 # <- };
-
