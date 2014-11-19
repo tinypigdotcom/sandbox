@@ -26,21 +26,21 @@ unshift @options,
     long_switch => 'help',
     short_desc  => 'help',
     long_desc   => 'display this help text and exit',
+    init        => '0',
     skip_case   => 1,
 },
 {
     long_switch => 'version',
     short_desc  => 'version',
     long_desc   => 'display version information and exit',
+    init        => '0',
     skip_case   => 1,
 };
 for (@options) {
     my $len = length $_->{short_desc};
     $sl = $len if $len > $sl;
 }
->]
-
-usage() {
+>]usage() {
 
     usage_top
     cat <<EOF_usage >&2
@@ -53,8 +53,7 @@ Example: $PROG [< $example >]
     $_->{varname} = $_->{long_switch};
     $_->{varname} =~ s/\W.*//; # turn backdate=i into backdate
     $OUT .= sprintf(" %3s, --%-${sl}s  $_->{long_desc}\n", "-$ff", $_->{short_desc});
-} >]
-EOF_usage
+} >]EOF_usage
 
 }
 
@@ -67,12 +66,12 @@ version() {
    echo "$PROG $VERSION" >&2
 }
 
-OPT_H=0
-OPT_HELP=0
-OPT_VERSION=0
-[< $INIT >]
-
 [<
+for (@options) {
+    my $var = 'OPT_' . uc($_->{varname});
+    $out .= "$var=$_->{init}\n";
+}
+'';
 $single_keys='';
 @long_opts=();
 for (@options) {
@@ -81,9 +80,7 @@ for (@options) {
 }
 $long_opts = join ',', @long_opts;
 '';
->]
-
-OPTS=`getopt -o [< $single_keys >] -l '[< $long_opts >]' -- "$@"`
+>]OPTS=`getopt -o [< $single_keys >] -l '[< $long_opts >]' -- "$@"`
 if [ $? != 0 ]; then
     short_usage
     exit $ERR_EXIT
@@ -118,5 +115,4 @@ for (@options) {
     esac
     shift
 done
-
 [< $CODE >]
