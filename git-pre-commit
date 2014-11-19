@@ -13,7 +13,8 @@ function ask()
     esac
 }
 
-if ! ask "Version numbers updated?"
-    then exit 1
-fi
+# skip versioning since it's just sandbox
+#if ! ask "Version numbers updated?"
+#    then exit 1
+#fi
 
