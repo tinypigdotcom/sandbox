@@ -4,10 +4,8 @@
 use 5.16.0;
 use warnings FATAL => 'all';
 
-use Data::Dumper;
 use File::Basename;
 use Getopt::Long;
-use IO::File;
 
 our $VERSION = '[< $VERSION >]';
 
@@ -53,17 +51,15 @@ sub usage {
     usage_top();
     warn <<EOF;
 [< $purpose >]
-Example: elog --backdate=3
+Example: $PROG [< $example >]
 
-[<
-for (@options) {
+[< for (@options) {
     my $ff = substr $_->{long_switch}, 0, 1;
     $_->{one_key} = $ff;
     $_->{varname} = $_->{long_switch};
     $_->{varname} =~ s/\W.*//; # turn backdate=i into backdate
     $OUT .= sprintf(" %3s, --%-${sl}s $_->{long_desc}\n", "-$ff", $_->{short_desc});
-}
->]
+} >]
 EOF
     return;
 }
@@ -88,11 +84,9 @@ for (@options) {
 Getopt::Long::Configure ("bundling");
 
 my %options = (
-[<
-for (@options) {
+[< for (@options) {
     $OUT .= sprintf("    \"%-${sl}s => \\\$$_->{varname},\n", "$_->{long_switch}\"");
-}
->]
+} >]
 );
 
 # Explicitly add single letter version of each option to allow bundling

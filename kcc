@@ -7,28 +7,18 @@ use Data::Dumper;
 use IO::File;
 use Text::Template;
 
-my $infile = shift @ARGV || 'dmb.ps';
-my $outfile = $infile;
-if ( $outfile =~ s/\.s\.pl$/\.pl/ ) {
-}
-else {
-    $outfile .= '.pl';
-}
+our $VERSION = '0.0.1';
+
+my $infile = shift @ARGV || 'kitty.var';
+my $outfile = 'kitty.pl';
 
 my $VAR1;
+
 sub dump_read {
     my $ifh = IO::File->new($infile, '<');
     croak if (!defined $ifh);
 
-    my $contents;
-    while (<$ifh>) {
-        chomp;
-        next if /^#!.*perl/;
-        s/^#\s*<-\s*//;
-        if ( !/\s*#->$/ ) {
-            $contents .= "$_\n";
-        }
-    }
+    my $contents = join('',<$ifh>);
     $ifh->close;
 
     my $data = eval $contents; ## no critic
@@ -41,7 +31,7 @@ sub dump_read {
 my $open_delimiter  = '[<';
 my $close_delimiter = '>]';
 my $template = Text::Template->new(
-    SOURCE     => 'perl.t',
+    SOURCE     => 'kitty.t',
     DELIMITERS => [ $open_delimiter, $close_delimiter ],
 ) or die "Couldn't construct template: $Text::Template::ERROR";
 
@@ -57,6 +47,6 @@ if (! defined $result) {
 my $ofh = IO::File->new($outfile, '>');
 die if (!defined $ofh);
 
-print $ofh "$result\n";
+print $ofh "$result";
 $ofh->close;
 
