@@ -1,43 +1,25 @@
 #!/bin/bash
 # <- my $code = <<'END_OF_CODE';
 
-if [ "$#" -lt 1 ]; then
-    do_short_usage
-fi
+#if [ "$#" -lt 1 ]; then
+#    do_short_usage
+#fi
 
-cd /www
-b=-1
-while read a
-do
-    let b=b+1
-    file[b]=$a
-done < <(find . -iname "*$**" )
+echo "OPT_BITCHIN={$OPT_BITCHIN}"
+echo "OPT_FRIENDS={$OPT_FRIENDS}"
+echo "OPT_FRIENDS_ARG={$OPT_FRIENDS_ARG}"
+echo "OPT_AWESOME={$OPT_AWESOME}"
+echo "OPT_AWESOME_ARG={$OPT_AWESOME_ARG}"
+echo "Done."
 
-let i=0
-until [ "$i" -gt "$b" ]
-do
-    echo "$i ${file[$i]}"
-    let i=i+1
-done
-
-echo
-f
-echo -n "f "
-read key index
-
-f $key ${file[$index]}
 # <- END_OF_CODE
-# <- my $init = <<'END_OF_INIT';
-# <- OPT_yesterday=0;
-# <- OPT_backdate=0;
-# <- END_OF_INIT
 # <- $VAR1 = {
-# <-     VERSION => '0.0.6',
-# <-     purpose => 'Search for a file and add it to the current "p" project.',
-# <-     example => 'menu.h',
+# <-     VERSION => '0.0.1',
+# <-     params  => '',
+# <-     purpose => 'this script is not interesting',
+# <-     example => '',
 # <-     CODE    => $code,
-# <-     INIT    => $init,
-# <-     target  => "$ENV{HOME}/bin/af",
+# <-     target  => "$ENV{HOME}/bin/testy",
 # <-     options => [
 # <-         {
 # <-             long_switch => 'bitchin',

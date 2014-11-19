@@ -6,7 +6,7 @@ PROG=`basename $0`
 ERR_EXIT=2
 
 usage_top()   {
-    echo "Usage: $PROG FILENAME_PART" >&2
+    echo "Usage: $PROG [< $params >]" >&2
 }
 
 short_usage() {
@@ -75,7 +75,12 @@ for (@options) {
 $single_keys='';
 @long_opts=();
 for (@options) {
-    $single_keys .= $_->{one_key};
+    my $sk = $_->{long_switch};
+    $sk =~ s/(\w)\w*(.*)/$1$2/;
+    if ( $2 ) {
+        $_->{has_arg}=1;
+    }
+    $single_keys .= $sk;
     push @long_opts, $_->{long_switch};
 }
 $long_opts = join ',', @long_opts;
@@ -103,8 +108,11 @@ do
 for (@options) {
     next if $_->{skip_case};
     my $var = 'OPT_' . uc($_->{varname});
-    $OUT .= sprintf(" %17s $var=1\n", "-$_->{one_key} | --$_->{varname})");
-    $OUT .= "                   break\n";
+    my $ext = '';
+    if ( $_->{has_arg} ) {
+        $ext = '; OPT_' . uc($_->{varname}) . '_ARG=$2; shift';
+    }
+    $OUT .= sprintf(" %17s $var=1$ext\n", "-$_->{one_key} | --$_->{varname})");
     $OUT .= "                   ;;\n";
 }
 >]               --) shift
