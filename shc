@@ -64,7 +64,7 @@ if ( $vars{target} ) {
 my $ofh = IO::File->new($outfile, '>');
 die if (!defined $ofh);
 
-print $ofh "$result\n";
+print $ofh "$result";
 $ofh->close;
 
 my $mode = 0700; chmod $mode, $outfile;
