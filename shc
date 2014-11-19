@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 # purpose: build sh programs from template
+# TODO
+# be able to handle switches with params (:) and optional params (::)
 
 use 5.16.0;
 
