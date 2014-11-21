@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use strict;
+use Text::Template;
+
+$Q::name = 'Donald';
+$Q::amount = 141.61;
+$Q::part = 'hyoid bone';
+
+my $text = Text::Template->fill_this_in( <<'EOM', PACKAGE => 'Q', PREPEND => q{ use strict; use vars qw($name $amount $part) });
+Dear {$name},
+You owe me ${sprintf('%.2f', $amount)}.
+Pay or I will break your {$part}.
+        Love,
+        Grand Vizopteryx of Irkutsk.
+EOM
+
+print $text;
