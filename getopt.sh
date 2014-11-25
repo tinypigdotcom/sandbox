@@ -1,7 +1,25 @@
 #!/bin/bash
 parsed_ops=$(
   perl -MGetopt::Long -le '
-    @options = ( "foo=s", "bar", "neg!" );
+    Getopt::Long::Configure ("bundling");
+
+    my @options = (
+        "help",
+        "version",
+        "backdate=i",
+        "yesterday",
+    );
+
+    # Explicitly add single letter version of each option to allow bundling
+    my ($key, $value);
+    my @temp = @options;
+    for my $letter (@temp) {
+        $letter =~ s/(\w)\w*/$1/;
+        next if $letter eq 'h';
+        push @options, $letter;
+    }
+    # Fix-ups from previous routine
+    push @options, 'h';
 
     Getopt::Long::Configure "bundling";
     $q = "'\''";
@@ -15,34 +33,4 @@ parsed_ops=$(
 echo $parsed_ops
 eval "$parsed_ops"
 
-
-my $h               = 0;
-my $help            = 0;
-my $version         = 0;
-my $backdate        = 0;
-my $yesterday       = 0;
-
-
-Getopt::Long::Configure ("bundling");
-
-my %options = (
-    "help"          => \$help,
-    "version"       => \$version,
-    "backdate=i"    => \$backdate,
-    "yesterday"     => \$yesterday,
-
-);
-
-# Explicitly add single letter version of each option to allow bundling
-my ($key, $value);
-my %temp = %options;
-while (($key,$value) = each %temp) {
-    my $letter = $key;
-    $letter =~ s/(\w)\w*/$1/;
-    $options{$letter} = $value;
-}
-# Fix-ups from previous routine
-$options{h} = \$h;
-
-GetOptions(%options) or errout("Error in command line arguments");
 
