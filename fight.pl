@@ -12,22 +12,22 @@ my %warrior = (
     armor_class  => 18,
     to_hit_bonus => 5,
     hit_points   => 34,
-    damage       => '1d10',
+    damage       => '3d6',
 );
 
 my %skeleton = (
-    name         => 'Skeleton',
-    armor_class  => 12,
+    name         => 'Giant',
+    armor_class  => 14,
     to_hit_bonus => 5,
-    hit_points   => 8,
+    hit_points   => 50,
     damage       => '1d10',
 );
 
 my @heroes = ({%warrior});
 my @foes = (
-    {%skeleton},
-    {%skeleton},
-    {%skeleton},
+    {%skeleton, name => 'Skeleton 1'},
+    {%skeleton, name => 'Skeleton 2'},
+    {%skeleton, name => 'Skeleton 3'},
 );
 
 sub random {
@@ -81,15 +81,25 @@ sub attack {
 
 sub is_dead {
     my ($actor) = @_;
-    if ( $actor->{hit_points} <= 0 ) {
-        print "$actor->{name} is dead!\n";
+    if ( ref $actor ne 'ARRAY' ) {
+        $actor = [$actor];
+    }
+    my $tot = 0;
+    my $dead = 0;
+    for ( @$actor ) {
+        if ( $_->{hit_points} <= 0 ) {
+            $dead++;
+        }
+        $tot++;
+    }
+    if ( $dead == $tot ) {
         return 1;
     }
     return;
 }
 
 sub death_check {
-    if ( is_dead(\%warrior) or is_dead(\%skeleton) ) {
+    if ( is_dead(\@heroes) or is_dead(\@foes) ) {
         print "Done\n";
         exit;
     }
@@ -98,19 +108,33 @@ sub death_check {
 
 sub do_attack {
     my ($actors, $foes) = @_;
-    print "do_attack:\n";
     for ( @$actors ) {
-        my $idx = random(scalar @$foes) - 1;
-        print "    actor: $_->{name}\n";
-        print "      foe: $foes->[$idx]->{name} ($idx)\n";
+        if ( is_dead( $_ ) ) {
+            print "$_->{name} is dead and cannot attack.\n";
+            next;
+        }
+        my $foe_dead = 1;
+        my $ii;
+        while ( $foe_dead ) {
+            my $idx = random(scalar @$foes);
+            $ii = $idx - 1;
+            print "$_->{name} vs $foes->[$ii]->{name}\n";
+            $foe_dead = is_dead( $foes->[$ii] );
+        }
+        attack($_,$foes->[$ii]);
     }
 }
 
 my $delay = 0;
 sub fight {
     print "Fight!\n";
-    do_attack(\@heroes, \@foes);
-    do_attack(\@foes, \@heroes);
+    for(1..10) {
+        do_attack(\@heroes, \@foes);
+        death_check();
+        do_attack(\@foes, \@heroes);
+        death_check();
+        sleep 5;
+    }
     exit;
     while (1) {
         attack(\%warrior, \%skeleton);
