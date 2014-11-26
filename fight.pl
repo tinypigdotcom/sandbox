@@ -15,9 +15,10 @@ my %warrior = (
     damage       => '3d6',
 );
 
-my %party = (
+my %heroes = (
     Tony => \%warrior,
     Bill => {
+    name         => 'Bill',
         armor_class  => 14,
         to_hit_bonus => 5,
         hit_points   => 30,
@@ -29,7 +30,7 @@ my %monster = (
     name         => 'Giant',
     armor_class  => 14,
     to_hit_bonus => 5,
-    hit_points   => 50,
+    hit_dice     => 10,
     damage       => '1d10',
     no_appearing => '1d10',
 );
@@ -38,9 +39,10 @@ my %foes = ();
 my $no_appearing = roll($monster{no_appearing});
 for ( 1 .. $no_appearing ) {
     my $name = "$monster{name} $_";
-    $foes{$name} = {%monster, name => $name};
+    my $hd = $monster{hit_dice};
+    my $hp = roll("${hd}d8");
+    $foes{$name} = {%monster, name => $name, hit_points => $hp };
 }
-die Dumper(\%foes);
 
 sub random {
     return int(rand(shift))+1;
@@ -93,13 +95,15 @@ sub attack {
 
 sub is_dead {
     my ($actor) = @_;
-    if ( ref $actor ne 'ARRAY' ) {
-        $actor = [$actor];
+    if ( ref $actor ne 'HASH' ) {
+        $actor = {$actor->{name} => $actor};
     }
     my $tot = 0;
     my $dead = 0;
-    for ( @$actor ) {
-        if ( $_->{hit_points} <= 0 ) {
+    my ($key, $value);
+        die Dumper($actor);
+    while (($key, $value) = each %$actor) {
+        if ( $value->{hit_points} <= 0 ) {
             $dead++;
         }
         $tot++;
@@ -120,20 +124,27 @@ sub death_check {
 
 sub do_attack {
     my ($actors, $foes) = @_;
-    for ( @$actors ) {
-        if ( is_dead( $_ ) ) {
-            print "$_->{name} is dead and cannot attack.\n";
+    my %local_actors = %$actors;
+
+    my ($key, $value);
+    while (($key, $value) = each %local_actors) {
+        if ( is_dead( $value ) ) {
+            print "$value->{name} is dead and cannot attack.\n";
             next;
         }
         my $foe_dead = 1;
-        my $ii;
+        my $sanity_check = 20;
+        my $idx;
         while ( $foe_dead ) {
-            my $idx = random(scalar @$foes);
-            $ii = $idx - 1;
-            print "$_->{name} vs $foes->[$ii]->{name}\n";
-            $foe_dead = is_dead( $foes->[$ii] );
+            my @foe_keys = keys %$foes;
+            $idx = $foe_keys[random(scalar @foe_keys)-1];
+            print "$key vs $idx\n";
+            $foe_dead = is_dead( $foes->{$idx} );
+            if ( $sanity_check-- < 1 ) {
+                die "too many loops";
+            }
         }
-        attack($_,$foes->[$ii]);
+        attack($value,$foes->{$idx});
     }
 }
 
@@ -147,13 +158,12 @@ sub fight {
         death_check();
         sleep 5;
     }
-    exit;
+    return;
 }
 
 sub main {
     my @argv = @_;
-    fight();
-    return;
+    return fight();
 }
 
 my $rc = ( main(@ARGV) || 0 );
