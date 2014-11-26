@@ -15,20 +15,32 @@ my %warrior = (
     damage       => '3d6',
 );
 
-my %skeleton = (
+my %party = (
+    Tony => \%warrior,
+    Bill => {
+        armor_class  => 14,
+        to_hit_bonus => 5,
+        hit_points   => 30,
+        damage       => '1d6',
+    },
+);
+
+my %monster = (
     name         => 'Giant',
     armor_class  => 14,
     to_hit_bonus => 5,
     hit_points   => 50,
     damage       => '1d10',
+    no_appearing => '1d10',
 );
 
-my @heroes = ({%warrior});
-my @foes = (
-    {%skeleton, name => 'Skeleton 1'},
-    {%skeleton, name => 'Skeleton 2'},
-    {%skeleton, name => 'Skeleton 3'},
-);
+my %foes = ();
+my $no_appearing = roll($monster{no_appearing});
+for ( 1 .. $no_appearing ) {
+    my $name = "$monster{name} $_";
+    $foes{$name} = {%monster, name => $name};
+}
+die Dumper(\%foes);
 
 sub random {
     return int(rand(shift))+1;
@@ -99,7 +111,7 @@ sub is_dead {
 }
 
 sub death_check {
-    if ( is_dead(\@heroes) or is_dead(\@foes) ) {
+    if ( is_dead(\%heroes) or is_dead(\%foes) ) {
         print "Done\n";
         exit;
     }
@@ -129,21 +141,13 @@ my $delay = 0;
 sub fight {
     print "Fight!\n";
     for(1..10) {
-        do_attack(\@heroes, \@foes);
+        do_attack(\%heroes, \%foes);
         death_check();
-        do_attack(\@foes, \@heroes);
+        do_attack(\%foes, \%heroes);
         death_check();
         sleep 5;
     }
     exit;
-    while (1) {
-        attack(\%warrior, \%skeleton);
-        death_check();
-        sleep $delay;
-        attack(\%skeleton, \%warrior);
-        death_check();
-        sleep $delay;
-    }
 }
 
 sub main {
