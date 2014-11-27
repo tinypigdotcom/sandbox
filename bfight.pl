@@ -9,11 +9,16 @@
 #   remove sanity check
 
 use strict;
-my $NUM_RUNS = shift @ARGV || 1;
+my $SHOW_DETAIL = 0;
+my $NUM_RUNS = shift @ARGV || 100;
 
 my ( %heroes, %monster, %foes, @versus );
 
-sub set_or_reset {
+sub detail {
+    print @_ if $SHOW_DETAIL;
+}
+
+sub init {
     %heroes = (
         Tony => {
             name        => 'Tony',
@@ -27,20 +32,14 @@ sub set_or_reset {
             hit_points  => 40,
             damage      => '1d10',
         },
-        Bill => {
-            name        => 'Bill',
-            armor_class => 14,
-            hit_points  => 30,
-            damage      => '1d6',
-        },
     );
 
     %monster = (
-        name         => 'Storm Giant',
-        armor_class  => 15,
-        hit_dice     => 30,
-        damage       => '3d6',
-        no_appearing => '1',
+        name         => 'Skeleton',
+        armor_class  => 13,
+        hit_dice     => 1,
+        damage       => '1d8',
+        no_appearing => '1d20',
     );
 
     %foes = ();
@@ -56,12 +55,10 @@ sub set_or_reset {
         {
             name   => "Cool Guys",
             actors => \%heroes,
-            living => scalar keys %heroes,
         },
         {
             name   => "Meanies",
             actors => \%foes,
-            living => scalar keys %foes,
         },
     );
 }
@@ -82,12 +79,15 @@ sub roll {
     else {
         die "Invalid format";
     }
+
     $multiplier ||= 1;
     my $total = 0;
     for ( 1 .. $multiplier ) {
         $total += random($die);
     }
+
     eval "\$total = $total $bonus";
+
     return $total;
 }
 
@@ -99,23 +99,27 @@ sub damage {
 
 sub attack {
     my ( $actor, $foe ) = @_;
+
     my $attack_roll = roll('d20');
-    print "$actor->{name} attacks $foe->{name}! ";
-    print "roll: $attack_roll vs AC $foe->{armor_class} ";
-    my $damage  = 0;
+
+    detail "$actor->{name} attacks $foe->{name}! ";
+    detail "roll: $attack_roll vs AC $foe->{armor_class} ";
+
     my $is_dead = 0;
     if ( $attack_roll >= $foe->{armor_class} ) {
+        my $damage  = 0;
         $damage = roll( $actor->{damage} );
         $is_dead = damage( $foe, $damage );
-        print "Hit! $damage damage. $foe->{name} at $foe->{hit_points}. ";
+        detail "Hit! $damage damage. $foe->{name} at $foe->{hit_points}. ";
         if ($is_dead) {
-            print "$foe->{name} is dead!";
+            detail "$foe->{name} is dead!";
         }
     }
     else {
-        print "Miss!";
+        detail "Miss!";
     }
-    print "\n";
+
+    detail "\n";
     return $is_dead;
 }
 
@@ -129,71 +133,49 @@ sub check_for_deadness {
     return;
 }
 
-sub is_dead {
-    my ($actor) = @_;
-    if ( $actor->{is_dead} ) {
-        return 1;
-    }
-    return check_for_deadness($actor);
-}
-
 sub group_vs_group {
     my ( $atk, $targ ) = @_;
 
     my $attackers = $atk->{actors};
     my $targets   = $targ->{actors};
 
-    my %local_attackers = %$attackers;
-
-    my @live_attackers = grep { !is_dead($_) } values %$attackers;
-    my %live_targets;
-    for ( keys %$targets ) {
-        if ( !is_dead( $targets->{$_} ) ) {
-            $live_targets{$_} = $targets->{$_};
-        }
-    }
-
-    # what if bill kills skeleton 1, how does it get removed so tony does not
-    # try to hit it
-    for my $actor (@live_attackers) {
-        my $idx;
-        my @foe_keys = keys %live_targets;
-        $idx = $foe_keys[ random( scalar @foe_keys ) - 1 ];
-        print "$actor->{name} vs $idx\n";
-        my $killed = attack( $actor, $live_targets{$idx} );
+    for my $actor (values %$attackers) {
+        my @foe_keys = keys %$targets;
+        my $idx = $foe_keys[ random( scalar @foe_keys ) - 1 ];
+        detail "$actor->{name} vs $idx\n";
+        my $killed = attack( $actor, $targets->{$idx} );
         if ( defined $killed && $killed ) {
-            $targ->{living} -= $killed;
-            if ( $targ->{living} <= 0 ) {
+            delete $targets->{$idx};
+            if ( scalar %{$targ->{actors}} <= 0 ) {
                 return $atk->{name}; #Winner!
             }
-            delete $live_targets{$idx};
         }
-    }
-    return;
-}
-
-sub fight {
-    my %wins;
-    for my $run ( 1 .. $NUM_RUNS ) {
-        set_or_reset();
-        my $winner;
-        while (1) {
-            $winner = group_vs_group( $versus[0], $versus[1] );
-            last if $winner;
-            $winner = group_vs_group( $versus[1], $versus[0] );
-            last if $winner;
-        }
-        $wins{$winner}++;
-    }
-    for ( keys %wins ) {
-        print "$_: $wins{$_}\n";
     }
     return;
 }
 
 sub main {
     my @argv = @_;
-    return fight();
+    my %wins;
+
+    for my $run ( 1 .. $NUM_RUNS ) {
+        init();
+        my $winner;
+      WHILE:
+        while (1) {
+            for my $i ( 0 .. 1 ) {
+                $winner = group_vs_group( $versus[$i], $versus[ !$i ] );
+                last WHILE if $winner;
+            }
+        }
+        $wins{$winner}++;
+    }
+
+    for ( sort { $wins{$b} <=> $wins{$a} } keys %wins ) {
+        printf "%12s: $wins{$_}\n", $_;
+    }
+
+    return;
 }
 
 my $rc = ( main(@ARGV) || 0 );
