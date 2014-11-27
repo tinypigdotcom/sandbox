@@ -1,12 +1,4 @@
 #!/usr/bin/perl
-# WRITING A BLOG BASED ON THIS
-# TODO
-# idea: if dead, delete from hash
-# perltidy
-# perl critic
-# encapsulate
-# remove dead from consideration, thus:
-#   remove sanity check
 
 use strict;
 my $SHOW_DETAIL = 0;
@@ -178,7 +170,5 @@ sub main {
     return;
 }
 
-my $rc = ( main(@ARGV) || 0 );
-
-exit $rc;
+exit ( main(@ARGV) || 0 );
 
