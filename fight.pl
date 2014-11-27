@@ -15,7 +15,7 @@ my %warrior = (
     damage       => '3d6',
 );
 
-my %heroes = (
+my %_heroes = (
     Tony => \%warrior,
     Bill => {
     name         => 'Bill',
@@ -34,15 +34,19 @@ my %monster = (
     damage       => '1d10',
     no_appearing => '1d10',
 );
-
-my %foes = ();
+my %_foes = ();
 my $no_appearing = roll($monster{no_appearing});
 for ( 1 .. $no_appearing ) {
     my $name = "$monster{name} $_";
     my $hd = $monster{hit_dice};
     my $hp = roll("${hd}d8");
-    $foes{$name} = {%monster, name => $name, hit_points => $hp };
+    $_foes{$name} = {%monster, name => $name, hit_points => $hp };
 }
+
+my %versus = (
+    heroes => \%_heroes,
+    foes   => \%_foes,
+);
 
 sub random {
     return int(rand(shift))+1;
@@ -69,10 +73,7 @@ sub roll {
 sub damage {
     my ($actor, $damage) = @_;
     $actor->{hit_points} -= $damage;
-    if ( $actor->{hit_points} < 0 ) {
-        $actor->{hit_points} = 0;
-    }
-    return $actor->{hit_points};
+    return check_for_deathification($actor);
 }
 
 sub attack {
@@ -84,8 +85,11 @@ sub attack {
     my $damage = 0;
     if ( $final_attack >= $foe->{armor_class} ) {
         $damage = roll($actor->{damage});
-        my $remaining = damage($foe, $damage);
-        print "Hit! $damage damage. $foe->{name} at $remaining";
+        my $is_dead = damage($foe, $damage);
+        print "Hit! $damage damage. $foe->{name} at $foe->{hit_points}. ";
+        if ( $is_dead ) {
+            print "$foe->{name} is dead!";
+        }
     }
     else {
         print "Miss!";
@@ -93,33 +97,37 @@ sub attack {
     print "\n";
 }
 
-sub is_dead {
+sub set_dead {
+    shift->{is_dead} = 1;
+    return;
+}
+
+sub check_for_deathification {
     my ($actor) = @_;
-    if ( ref $actor ne 'HASH' ) {
-        $actor = {$actor->{name} => $actor};
-    }
-    my $tot = 0;
-    my $dead = 0;
-    my ($key, $value);
-        die Dumper($actor);
-    while (($key, $value) = each %$actor) {
-        if ( $value->{hit_points} <= 0 ) {
-            $dead++;
-        }
-        $tot++;
-    }
-    if ( $dead == $tot ) {
+    if ( $actor->{hit_points} <= 0 ) {
+        $actor->{hit_points} = 0;
+        set_dead($actor);
         return 1;
     }
     return;
 }
 
-sub death_check {
-    if ( is_dead(\%heroes) or is_dead(\%foes) ) {
-        print "Done\n";
-        exit;
+sub is_dead {
+    my ($actor) = @_;
+    if ( $actor->{is_dead} ) {
+        return 1;
     }
-    return;
+    return check_for_deathification($actor);
+}
+
+#sub death_check {
+#    if ( is_dead(\%heroes) or is_dead(\%foes) ) {
+#        print "Done\n";
+#        exit;
+#    }
+#    return;
+#}
+sub check_all {
 }
 
 sub do_attack {
@@ -152,10 +160,9 @@ my $delay = 0;
 sub fight {
     print "Fight!\n";
     for(1..10) {
-        do_attack(\%heroes, \%foes);
-        death_check();
-        do_attack(\%foes, \%heroes);
-        death_check();
+        my @vs = values %versus;
+        do_attack($vs[0], $vs[1]);
+        do_attack($vs[1], $vs[0]);
         sleep 5;
     }
     return;
