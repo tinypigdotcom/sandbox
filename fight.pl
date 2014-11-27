@@ -6,22 +6,36 @@ use warnings FATAL => 'all';
 
 use Data::Dumper;
 my $DEBUG=0;
-my $DETAIL=0;
+my $NUM_RUNS=999;
+my $MAX_RUNS_FOR_DETAIL=5;
+my $DETAIL;
+if ( $NUM_RUNS <= $MAX_RUNS_FOR_DETAIL ) {
+    $DETAIL=1;
+}
+else {
+    $DETAIL=0;
+}
 
-my %_heroes;
+my %heroes;
 my %monster;
-my %_foes;
-my $no_appearing;
+my %foes;
 my @versus;
 
 sub set_or_reset {
-    %_heroes = (
+    %heroes = (
         Tony => {
             name         => 'Tony',
             armor_class  => 18,
             to_hit_bonus => 5,
             hit_points   => 34,
-            damage       => '3d6',
+            damage       => '1d8',
+        },
+        Jax => {
+            name         => 'Jax',
+            armor_class  => 18,
+            to_hit_bonus => 6,
+            hit_points   => 40,
+            damage       => '1d10',
         },
         Bill => {
             name         => 'Bill',
@@ -33,33 +47,33 @@ sub set_or_reset {
     );
 
     %monster = (
-        name         => 'Skeleton',
-        armor_class  => 14,
-        to_hit_bonus => 3,
-        hit_dice     => 1,
-        damage       => '1d8',
-        no_appearing => '8',
+        name         => 'Storm Giant',
+        armor_class  => 15,
+        to_hit_bonus => 7,
+        hit_dice     => 30,
+        damage       => '3d6',
+        no_appearing => '1',
     );
 
-    %_foes = ();
-    $no_appearing = roll($monster{no_appearing});
+    %foes = ();
+    my $no_appearing = roll($monster{no_appearing});
     for ( 1 .. $no_appearing ) {
         my $name = "$monster{name} $_";
         my $hd = $monster{hit_dice};
         my $hp = roll("${hd}d8");
-        $_foes{$name} = {%monster, name => $name, hit_points => $hp };
+        $foes{$name} = {%monster, name => $name, hit_points => $hp };
     }
 
     @versus = (
         {
-            name   => "Tony and Bill",
-            actors => \%_heroes,
-            living => scalar keys %_heroes,
+            name   => "Cool Guys",
+            actors => \%heroes,
+            living => scalar keys %heroes,
         },
         {
-            name   => "The Skeletons",
-            actors => \%_foes,
-            living => scalar keys %_foes,
+            name   => "The Storm Giant",
+            actors => \%foes,
+            living => scalar keys %foes,
         },
     );
 }
@@ -100,7 +114,7 @@ sub roll {
 sub damage {
     my ($actor, $damage) = @_;
     $actor->{hit_points} -= $damage;
-    return check_for_deathification($actor);
+    return check_for_deadness($actor);
 }
 
 sub attack {
@@ -131,7 +145,7 @@ sub set_dead {
     return;
 }
 
-sub check_for_deathification {
+sub check_for_deadness {
     my ($actor) = @_;
     if ( $actor->{hit_points} <= 0 ) {
         $actor->{hit_points} = 0;
@@ -146,14 +160,14 @@ sub is_dead {
     if ( $actor->{is_dead} ) {
         return 1;
     }
-    return check_for_deathification($actor);
+    return check_for_deadness($actor);
 }
 
 sub group_vs_group {
     my ($atk, $targ) = @_;
 
     my $attackers = $atk->{actors};
-    my $foes      = $targ->{actors};
+    my $targets   = $targ->{actors};
 
     my %local_attackers = %$attackers;
 
@@ -167,15 +181,15 @@ sub group_vs_group {
         my $sanity_check = 999;
         my $idx;
         while ( $foe_dead ) {
-            my @foe_keys = keys %$foes;
+            my @foe_keys = keys %$targets;
             $idx = $foe_keys[random(scalar @foe_keys)-1];
             debug("$key vs $idx\n");
-            $foe_dead = is_dead( $foes->{$idx} );
+            $foe_dead = is_dead( $targets->{$idx} );
             if ( $sanity_check-- < 1 ) {
                 die "too many loops";
             }
         }
-        my $killed = attack($value,$foes->{$idx});
+        my $killed = attack($value,$targets->{$idx});
         if ( defined $killed && $killed ) {
             $targ->{living} -= $killed;
             if ( $targ->{living} <= 0 ) {
@@ -189,7 +203,7 @@ sub group_vs_group {
 my $delay = 0;
 sub fight {
     my %wins;
-    for my $run ( 1 .. 1000 ) {
+    for my $run ( 1 .. $NUM_RUNS ) {
         set_or_reset();
         my $winner;
         while (1) {
