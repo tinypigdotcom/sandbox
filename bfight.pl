@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
 use strict;
-my $SHOW_DETAIL = 0;
+my $SHOW_DETAIL = 1;
 my $NUM_RUNS = shift @ARGV || 100;
 
-my ( %heroes, %monster, %foes, @versus );
+my ( %heroes, %foes, @versus );
 
 sub detail {
     print @_ if $SHOW_DETAIL;
@@ -26,7 +26,7 @@ sub init {
         },
     );
 
-    %monster = (
+    my %monster = (
         name         => 'Skeleton',
         armor_class  => 13,
         hit_dice     => 1,
@@ -35,12 +35,13 @@ sub init {
     );
 
     %foes = ();
-    my $no_appearing = roll( $monster{no_appearing} );
-    for ( 1 .. $no_appearing ) {
+    for ( 1 .. roll( $monster{no_appearing} ) ) {
         my $name = "$monster{name} $_";
-        my $hd   = $monster{hit_dice};
-        my $hp   = roll("${hd}d8");
-        $foes{$name} = { %monster, name => $name, hit_points => $hp };
+        $foes{$name} = {
+            %monster,
+            name       => $name,
+            hit_points => roll("$monster{hit_dice}d8"),
+        };
     }
 
     @versus = (
@@ -99,7 +100,7 @@ sub attack {
 
     my $is_dead = 0;
     if ( $attack_roll >= $foe->{armor_class} ) {
-        my $damage  = 0;
+        my $damage = 0;
         $damage = roll( $actor->{damage} );
         $is_dead = damage( $foe, $damage );
         detail "Hit! $damage damage. $foe->{name} at $foe->{hit_points}. ";
@@ -122,7 +123,7 @@ sub check_for_deadness {
         $actor->{is_dead}    = 1;
         return 1;
     }
-    return;
+    return 0;
 }
 
 sub group_vs_group {
@@ -131,15 +132,14 @@ sub group_vs_group {
     my $attackers = $atk->{actors};
     my $targets   = $targ->{actors};
 
-    for my $actor (values %$attackers) {
+    for my $actor ( values %$attackers ) {
         my @foe_keys = keys %$targets;
-        my $idx = $foe_keys[ random( scalar @foe_keys ) - 1 ];
-        detail "$actor->{name} vs $idx\n";
-        my $killed = attack( $actor, $targets->{$idx} );
-        if ( defined $killed && $killed ) {
+        my $idx      = $foe_keys[ int( rand( scalar @foe_keys ) ) ];
+        my $killed   = attack( $actor, $targets->{$idx} );
+        if ( $killed ) {
             delete $targets->{$idx};
-            if ( scalar %{$targ->{actors}} <= 0 ) {
-                return $atk->{name}; #Winner!
+            if ( scalar %{ $targ->{actors} } <= 0 ) {
+                return $atk->{name};    #Winner!
             }
         }
     }
@@ -153,22 +153,20 @@ sub main {
     for my $run ( 1 .. $NUM_RUNS ) {
         init();
         my $winner;
-      WHILE:
+        my $i = int( rand(2) );
         while (1) {
-            for my $i ( 0 .. 1 ) {
-                $winner = group_vs_group( $versus[$i], $versus[ !$i ] );
-                last WHILE if $winner;
-            }
+            $winner = group_vs_group( $versus[$i], $versus[ $i ^= 1 ] );
+            last if $winner;
         }
         $wins{$winner}++;
     }
 
-    for ( sort { $wins{$b} <=> $wins{$a} } keys %wins ) {
+    for ( keys %wins ) {
         printf "%12s: $wins{$_}\n", $_;
     }
 
     return;
 }
 
-exit ( main(@ARGV) || 0 );
+exit( main(@ARGV) || 0 );
 
