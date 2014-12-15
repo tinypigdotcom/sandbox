@@ -1,0 +1,79 @@
+<html><head>
+
+  <meta charset="UTF-8">
+
+  <meta name="google" value="notranslate">
+
+  <!--
+Copyright (c) 2014 by Zach Saucier (http://codepen.io/Zeaklous/pen/GokAm)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+  <title>CodePen - Pausing Transitions</title>
+
+  <style>.box {
+  margin: 30px;
+  height: 50px;
+  width: 50px;
+  background-color: blue;
+}
+.box.horizTranslate {
+  -webkit-transition: 3s;
+  -moz-transition: 3s;
+  -ms-transition: 3s;
+  -o-transition: 3s;
+  transition: 3s;
+  margin-left: 50% !important;
+}</style>
+
+</head>
+
+<body onload="_l='t';">
+
+  <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+
+<h3>Pure Javascript</h3>
+<div class="box" style="margin-left: 363.5px;"></div> 
+<button class="toggleButton" value="play">Play</button>
+
+<h3>jQuery</h3>
+<div class="box" style="margin-left: 152.8125px;"></div> 
+<button class="toggleButton" value="play">Play</button>
+
+  <script src="http://assets.codepen.io/assets/common/stopExecutionOnTimeout-6c99970ade81e43be51fa877be0f7600.js"></script>
+
+  <script>
+var boxOne = document.getElementsByClassName('box')[0], $boxTwo = $('.box:eq(1)');
+document.getElementsByClassName('toggleButton')[0].onclick = function () {
+    if (this.innerHTML === 'Play') {
+        this.innerHTML = 'Pause';
+        boxOne.classList.add('horizTranslate');
+    } else {
+        this.innerHTML = 'Play';
+        var computedStyle = window.getComputedStyle(boxOne), marginLeft = computedStyle.getPropertyValue('margin-left');
+        boxOne.style.marginLeft = marginLeft;
+        boxOne.classList.remove('horizTranslate');
+    }
+};
+$('.toggleButton:eq(1)').on('click', function () {
+    if ($(this).html() === 'Play') {
+        $(this).html('Pause');
+        $boxTwo.addClass('horizTranslate');
+    } else {
+        $(this).html('Play');
+        var computedStyle = $boxTwo.css('margin-left');
+        $boxTwo.removeClass('horizTranslate');
+        $boxTwo.css('margin-left', computedStyle);
+    }
+});
+  </script>
+
+
+
+</body></html>
+
