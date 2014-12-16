@@ -27,24 +27,40 @@ function sayHi() {
     .blue {
         color: blue;
     }
-    #peep {
+    #peep_old {
         background-color: yellow;
     }
-    img {
+    #city_old {
+        top: 400px;
+        left: 1px;
+        height: 180px;
+        width: 800px;
+        background: transparent url("new_york.jpg") no-repeat scroll 0 0;
+        background-size: 100%;
+        background-color: #cccccc;
+    }
+    body_old {
+        background: transparent url("new_york.jpg") no-repeat scroll 0 0;
+        background-size: 100%;
+        background-color: #cccccc;
+    }
+    #cat {
         position: absolute;
         top: 400px;
         left: 400px;
+        display: none;
     }
 </style>
 </head>
 <body>
 
+<img id="city" src="new_york.jpg"/>
 <div id="peep"><h1>Heading 1</h1></div>
 <h2>Heading 2</h2>
 <p>This is a paragraph.</p>
 <p>This is another paragraph.</p>
 <div>This is some important text!</div>
-<img src="cat.jpg"/>
+<img id="cat" src="cat.jpg"/>
 <br>
 <button id="toggle">Toggle classes for elements</button>
 <button onclick="sayHi()">Say Hi</button>
