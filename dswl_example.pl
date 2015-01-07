@@ -1,8 +1,3 @@
-#!/usr/bin/perl
-
-use strict;
-use warnings;
-
 use Devel::StackTrace::WithLexicals;
 
 sub foo {
@@ -13,11 +8,11 @@ sub foo {
 
 sub bar {
     my $trace = Devel::StackTrace::WithLexicals->new(
-        unsafe_ref_capture => 1 # warning: can cause memory leak
+        unsafe_ref_capture => 1    # warning: can cause memory leak
     );
-    while ( my $frame = $trace->next_frame() ) {
+    while ( my $frame = $trace->prev_frame() ) {
         my $yy = $frame->lexical('$abc');
-        ${$yy}++ if ref $yy eq 'SCALAR';
+        ${$yy}++ if $yy;           # found foo()'s lexical $abc. Increment it!
     }
 }
 
