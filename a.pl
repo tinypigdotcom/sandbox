@@ -1,96 +1,77 @@
-Title: TEMPLATE_TITLE1
-Author: David M. Bradford
-css: table.css
-Base Header Level:  2
+#!/usr/bin/perl
 
-The point of this article is to describe how to refactor lots of nested if-then code
-Normal text with some `code`.
+use strict;
+use warnings FATAL => 'all';
 
-    print "a block of code";
-    print "indent with spaces";
+use Data::Dumper;
 
-    use Data::Dumper;
-    use Try::Tiny;
+sub function1 {
+    print "I am a.pl\n";
+}
 
-    sub perform_item_update {
+sub main {
+    my @argv = @_;
+    print Dumper(\@argv);
+    function1();
+    return;
+}
+
+my $rc = ( main(@ARGV) || 0 );
+
+exit $rc;
+
+sub directory_read {
+    # example
+    # my @dot_files = grep { /^\./ && -f "$some_dir/$_" } get_directory($target);
+    sub get_directory {
+        my ($dir) = @_;
+        opendir(my $dh, $dir) || die "can't opendir $dir: $!";
+        my @files = readdir($dh);
+        closedir $dh;
+        return @files;
     }
 
-    sub complex_function {
-        print "I am b.pl\n";
-        my $input;
-        my $option;
-        my $user_admin_level;
-        if ($input) {
-            if ($option eq 'update_item') {
-                if ($user_admin_level >= 1) {
-                    my $error = '';
-                    try {
-                        perform_item_update();
-                    } catch {
-                        $error = $_;
-                    };
-                    if ($error) {
-                        warn "Error $error occurred";
-                    }
-                    else {
-                        print "Item successfully updated.\n";
-                    }
-                }
-                else {
-                    warn "Insufficient privileges!";
-                }
-            }
-        }
-        else {
-            print "No input!\n";
-        }
+    my $target = $ENV{HOME};
+    my @bins = grep { /^bin\d?/ && -d "$target/$_" } get_directory($target);
+}
+
+
+sub file_slurp {
+    my $fh;
+    my $contents = do { local $/; <$fh> }
+}
+
+
+sub infile {
+    use IO::File;
+
+    my $ifh = IO::File->new($0, '<');
+    die if (!defined $ifh);
+
+    while(<$ifh>) {
+        chomp;
+        print "l: $_\n";
     }
-
-    sub refactored_function {
-        print "I am b.pl\n";
-        my $processing_input;
-        my $this_option_selected;
-        my $has_permission;
-        my $update_was_successful;
-        if ($processing_input) {
-            if ($this_option_selected) {
-                if ($has_permission) {
-                    if ($update_was_successful) {
-                    }
-                }
-            }
-        }
-        else {
-            print "No input!";
-        }
-    }
-
-    sub main {
-        my @argv = @_;
-        print Dumper(\@argv);
-        refactored_function();
-        return;
-    }
-
-    my $rc = ( main(@ARGV) || 0 );
-
-    exit $rc;
-
-    #      try {
-    #        die "foo";
-    #      } catch {
-    #        warn "caught error: $_"; # not $@
-    #      };
+    $ifh->close;
+}
 
 
-   A       | Dang         | Table
-  -------- | ------------ | -------------------------------------------
-   1       | `formatted`  | whatever
-   2       | `code`       | blah blah
+sub outfile {
+    use IO::File;
+    my $ofh = IO::File->new('a.out', '>');
+    die if (!defined $ofh);
 
-This is a link [Nice Text](http://actual.uri.com)
+    print $ofh "bar\n";
+    $ofh->close;
+}
 
-A link to an image:
 
-![](fix_lines.gif)
+sub timestamp {
+    my ($sec,$min,$hour,$mday,$mon,$year) = localtime(time);
+
+    $mon++;
+    $year += 1900;
+
+    return sprintf("%04s%02s%02s%02s%02s%02s",$year,$mon,$mday,$hour,$min,$sec);
+}
 

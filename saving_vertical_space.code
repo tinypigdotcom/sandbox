@@ -1,0 +1,293 @@
+
+    sub roll {
+        my $input = shift;
+        die unless $input =~ /d/;
+        if ( $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/ ) {
+            my $num   = $1 || 1;
+            my $die   = $2;
+            my $plus  = $3;
+            my $end   = $4;
+            my $total = 0;
+            my @dice;
+            for my $count ( 1 .. $num ) {
+                my $single = int( rand($die) ) + 1;
+                push @dice, $single;
+                print "$single\n";
+            }
+            if ( $plus eq 'b' ) {
+                if ( $end > $num ) {
+                    $end = $num;
+                }
+                @dice = sort { $b <=> $a } @dice;
+                $#dice = $end - 1;
+            }
+            for my $die (@dice) {
+                $total += $die;
+            }
+            if ( $plus eq '+' ) {
+                $total += $end;
+            }
+            elsif ( $plus eq '-' ) {
+                $total -= $end;
+            }
+            elsif ( $plus eq '*' ) {
+                $total *= $end;
+            }
+            elsif ( $plus eq '/' ) {
+                $total /= $end;
+            }
+            return $total;
+        }
+        return;
+    }
+
+    die unless $input =~ /d/;
+    if ( $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/ ) {
+
+    return unless $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/;
+
+    my $die   = $2;
+    my $plus  = $3;
+    my $end   = $4;
+
+    my ($die,$plus,$end) = ($2,$3,$4);
+
+    for my $count ( 1 .. $num ) {
+        my $single = int( rand($die) ) + 1;
+        push @dice, $single;
+        print "$single\n";
+    }
+
+    push @dice, int(rand($die))+1 for ( 1..$num );
+
+    if ( $end > $num ) {
+        $end = $num;
+    }
+
+    $end =  $num if $end > $num;
+
+    for my $die (@dice) {
+        $total += $die;
+    }
+
+    $total += $_ for @dice;
+
+    if ( $plus eq '+' ) {
+        $total += $end;
+    }
+    elsif ( $plus eq '-' ) {
+        $total -= $end;
+    }
+    elsif ( $plus eq '*' ) {
+        $total *= $end;
+    }
+    elsif ( $plus eq '/' ) {
+        $total /= $end;
+    }
+
+    if    ( $plus eq '+' ) { $total += $end }
+    elsif ( $plus eq '-' ) { $total -= $end }
+    elsif ( $plus eq '*' ) { $total *= $end }
+    elsif ( $plus eq '/' ) { $total /= $end }
+
+    sub roll {
+        my $input = shift;
+        return unless $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/;
+        my $num = $1 || 1;
+        my ($die,$plus,$end) = ($2,$3,$4);
+        my $total = 0;
+        my @dice;
+        push @dice, int(rand($die))+1 for ( 1..$num );
+        if ( $plus eq 'b' ) {
+            $end =  $num if $end > $num;
+            @dice = sort { $b <=> $a } @dice;
+            $#dice = $end-1;
+        }
+        $total += $_ for @dice;
+        if    ( $plus eq '+' ) { $total += $end }
+        elsif ( $plus eq '-' ) { $total -= $end }
+        elsif ( $plus eq '*' ) { $total *= $end }
+        elsif ( $plus eq '/' ) { $total /= $end }
+        return $total;
+    }
+
+        if ( $plus eq '+' ) { $total += $end }
+        elsif ( $plus eq '-' ) { $total -= $end }
+        elsif ( $plus eq '*' ) { $total *= $end }
+        elsif ( $plus eq '/' ) { $total /= $end }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<pre style='color:#000020;background:#f6f8ff;'><html><body style='color:#000020; background:#f6f8ff; '><pre>
+<span style='color:#200080; font-weight:bold; '>sub </span>roll <span style='color:#406080; '>{</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> $input <span style='color:#308080; '>=</span> <span style='color:#400000; '>shift</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>die</span> <span style='color:#200080; font-weight:bold; '>unless</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#1060b6; '>d</span><span style='color:#800000; '>/</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#1060b6; '>d</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>+</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\D</span><span style='color:#308080; '>?</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#800000; '>/</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> $num   <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$1</span> <span style='color:#308080; '>|</span><span style='color:#308080; '>|</span> <span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> $die   <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$2</span><span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> $plus  <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$3</span><span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> $end   <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$4</span><span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> $total <span style='color:#308080; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>my</span> @dice<span style='color:#406080; '>;</span>
+            <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#200080; font-weight:bold; '>my</span> $count <span style='color:#308080; '>(</span> <span style='color:#008c00; '>1</span> <span style='color:#308080; '>..</span> $num <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                <span style='color:#200080; font-weight:bold; '>my</span> $single <span style='color:#308080; '>=</span> <span style='color:#400000; '>int</span><span style='color:#308080; '>(</span> <span style='color:#400000; '>rand</span><span style='color:#308080; '>(</span>$die<span style='color:#308080; '>)</span> <span style='color:#308080; '>)</span> <span style='color:#308080; '>+</span> <span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+                <span style='color:#400000; '>push</span> @dice<span style='color:#308080; '>,</span> $single<span style='color:#406080; '>;</span>
+                <span style='color:#200080; font-weight:bold; '>print</span> <span style='color:#1060b6; '>"$single</span><span style='color:#0f69ff; '>\n</span><span style='color:#1060b6; '>"</span><span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'b'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $end <span style='color:#308080; '>></span> $num <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                    $end <span style='color:#308080; '>=</span> $num<span style='color:#406080; '>;</span>
+                <span style='color:#406080; '>}</span>
+                @dice <span style='color:#308080; '>=</span> <span style='color:#400000; '>sort</span> <span style='color:#406080; '>{</span> $b <span style='color:#40015a; '>&lt;=></span> $a <span style='color:#406080; '>}</span> @dice<span style='color:#406080; '>;</span>
+                $#dice <span style='color:#308080; '>=</span> $end <span style='color:#308080; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#200080; font-weight:bold; '>my</span> $die <span style='color:#308080; '>(</span>@dice<span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $die<span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'+'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'-'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                $total <span style='color:#308080; '>-</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'*'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                $total <span style='color:#308080; '>*</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'/'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+                $total <span style='color:#308080; '>/</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+            <span style='color:#406080; '>}</span>
+            <span style='color:#200080; font-weight:bold; '>return</span> $total<span style='color:#406080; '>;</span>
+        <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>return</span><span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+    <span style='color:#200080; font-weight:bold; '>die</span> <span style='color:#200080; font-weight:bold; '>unless</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#1060b6; '>d</span><span style='color:#800000; '>/</span><span style='color:#406080; '>;</span>
+    <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#1060b6; '>d</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>+</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\D</span><span style='color:#308080; '>?</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#800000; '>/</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+
+    <span style='color:#200080; font-weight:bold; '>return</span> <span style='color:#200080; font-weight:bold; '>unless</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#1060b6; '>d</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>+</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\D</span><span style='color:#308080; '>?</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#800000; '>/</span><span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>my</span> $die   <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$2</span><span style='color:#406080; '>;</span>
+    <span style='color:#200080; font-weight:bold; '>my</span> $plus  <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$3</span><span style='color:#406080; '>;</span>
+    <span style='color:#200080; font-weight:bold; '>my</span> $end   <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$4</span><span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>my</span> <span style='color:#308080; '>(</span>$die<span style='color:#308080; '>,</span>$plus<span style='color:#308080; '>,</span>$end<span style='color:#308080; '>)</span> <span style='color:#308080; '>=</span> <span style='color:#308080; '>(</span><span style='color:#007d45; '>$2</span><span style='color:#308080; '>,</span><span style='color:#007d45; '>$3</span><span style='color:#308080; '>,</span><span style='color:#007d45; '>$4</span><span style='color:#308080; '>)</span><span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#200080; font-weight:bold; '>my</span> $count <span style='color:#308080; '>(</span> <span style='color:#008c00; '>1</span> <span style='color:#308080; '>..</span> $num <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> $single <span style='color:#308080; '>=</span> <span style='color:#400000; '>int</span><span style='color:#308080; '>(</span> <span style='color:#400000; '>rand</span><span style='color:#308080; '>(</span>$die<span style='color:#308080; '>)</span> <span style='color:#308080; '>)</span> <span style='color:#308080; '>+</span> <span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+        <span style='color:#400000; '>push</span> @dice<span style='color:#308080; '>,</span> $single<span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>print</span> <span style='color:#1060b6; '>"$single</span><span style='color:#0f69ff; '>\n</span><span style='color:#1060b6; '>"</span><span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+    <span style='color:#400000; '>push</span> @dice<span style='color:#308080; '>,</span> <span style='color:#400000; '>int</span><span style='color:#308080; '>(</span><span style='color:#400000; '>rand</span><span style='color:#308080; '>(</span>$die<span style='color:#308080; '>)</span><span style='color:#308080; '>)</span><span style='color:#308080; '>+</span><span style='color:#008c00; '>1</span> <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#308080; '>(</span> <span style='color:#008c00; '>1</span><span style='color:#308080; '>..</span>$num <span style='color:#308080; '>)</span><span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $end <span style='color:#308080; '>></span> $num <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $end <span style='color:#308080; '>=</span> $num<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+    $end <span style='color:#308080; '>=</span>  $num <span style='color:#200080; font-weight:bold; '>if</span> $end <span style='color:#308080; '>></span> $num<span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#200080; font-weight:bold; '>my</span> $die <span style='color:#308080; '>(</span>@dice<span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $die<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+    $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $_ <span style='color:#200080; font-weight:bold; '>for</span> @dice<span style='color:#406080; '>;</span>
+
+    <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'+'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'-'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $total <span style='color:#308080; '>-</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'*'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $total <span style='color:#308080; '>*</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'/'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+        $total <span style='color:#308080; '>/</span><span style='color:#308080; '>=</span> $end<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+    <span style='color:#200080; font-weight:bold; '>if</span>    <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'+'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'-'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>-</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'*'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>*</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+    <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'/'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>/</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+
+    <span style='color:#200080; font-weight:bold; '>sub </span>roll <span style='color:#406080; '>{</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> $input <span style='color:#308080; '>=</span> <span style='color:#400000; '>shift</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>return</span> <span style='color:#200080; font-weight:bold; '>unless</span> $input <span style='color:#308080; '>=</span><span style='color:#308080; '>~</span><span style='color:#1060b6; '> </span><span style='color:#800000; '>/</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#1060b6; '>d</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>+</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\D</span><span style='color:#308080; '>?</span><span style='color:#308080; '>)</span><span style='color:#007d45; '>\s</span><span style='color:#308080; '>*</span><span style='color:#308080; '>(</span><span style='color:#007d45; '>\d</span><span style='color:#308080; '>*</span><span style='color:#308080; '>)</span><span style='color:#800000; '>/</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> $num <span style='color:#308080; '>=</span> <span style='color:#007d45; '>$1</span> <span style='color:#308080; '>|</span><span style='color:#308080; '>|</span> <span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> <span style='color:#308080; '>(</span>$die<span style='color:#308080; '>,</span>$plus<span style='color:#308080; '>,</span>$end<span style='color:#308080; '>)</span> <span style='color:#308080; '>=</span> <span style='color:#308080; '>(</span><span style='color:#007d45; '>$2</span><span style='color:#308080; '>,</span><span style='color:#007d45; '>$3</span><span style='color:#308080; '>,</span><span style='color:#007d45; '>$4</span><span style='color:#308080; '>)</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> $total <span style='color:#308080; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>my</span> @dice<span style='color:#406080; '>;</span>
+        <span style='color:#400000; '>push</span> @dice<span style='color:#308080; '>,</span> <span style='color:#400000; '>int</span><span style='color:#308080; '>(</span><span style='color:#400000; '>rand</span><span style='color:#308080; '>(</span>$die<span style='color:#308080; '>)</span><span style='color:#308080; '>)</span><span style='color:#308080; '>+</span><span style='color:#008c00; '>1</span> <span style='color:#200080; font-weight:bold; '>for</span> <span style='color:#308080; '>(</span> <span style='color:#008c00; '>1</span><span style='color:#308080; '>..</span>$num <span style='color:#308080; '>)</span><span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'b'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span>
+            $end <span style='color:#308080; '>=</span>  $num <span style='color:#200080; font-weight:bold; '>if</span> $end <span style='color:#308080; '>></span> $num<span style='color:#406080; '>;</span>
+            @dice <span style='color:#308080; '>=</span> <span style='color:#400000; '>sort</span> <span style='color:#406080; '>{</span> $b <span style='color:#40015a; '>&lt;=></span> $a <span style='color:#406080; '>}</span> @dice<span style='color:#406080; '>;</span>
+            $#dice <span style='color:#308080; '>=</span> $end<span style='color:#308080; '>-</span><span style='color:#008c00; '>1</span><span style='color:#406080; '>;</span>
+        <span style='color:#406080; '>}</span>
+        $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $_ <span style='color:#200080; font-weight:bold; '>for</span> @dice<span style='color:#406080; '>;</span>
+        <span style='color:#200080; font-weight:bold; '>if</span>    <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'+'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'-'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>-</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'*'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>*</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'/'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>/</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>return</span> $total<span style='color:#406080; '>;</span>
+    <span style='color:#406080; '>}</span>
+
+        <span style='color:#200080; font-weight:bold; '>if</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'+'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>+</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'-'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>-</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'*'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>*</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+        <span style='color:#200080; font-weight:bold; '>elsif</span> <span style='color:#308080; '>(</span> $plus <span style='color:#308080; '>eq</span> <span style='color:#1060b6; '>'/'</span> <span style='color:#308080; '>)</span> <span style='color:#406080; '>{</span> $total <span style='color:#308080; '>/</span><span style='color:#308080; '>=</span> $end <span style='color:#406080; '>}</span>
+</pre>
+
+
+
+
+
+
+
+
+
+
