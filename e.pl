@@ -72,7 +72,7 @@ sub function1 {
                     $namespace ||= 'new';
                     $dest_string =~ s{( class=")}{$1$namespace-}g;
                     $dest_string =~ s{<pre>}{<pre class="$namespace">}g;
-                    output "$dest_string\n";
+                    output "$dest_string(N)\n";
                 }
 #                if ($stderr_string)    { output "<<STDERR>>\n$stderr_string\n" }
 #                if ($errorfile_string) { output "<<.ERR file>>\n$errorfile_string\n" }
@@ -86,10 +86,10 @@ sub function1 {
         }
         next if $control;
         if ($perl_on) {
-            $source_string .= "$_\n";
+            $source_string .= "$_(N)\n";
         }
         else {
-            output "$_\n";
+            output "$_(N)\n";
         }
     }
     $ifh->close;
@@ -99,7 +99,7 @@ sub function1 {
     die if (!defined $ifh);
     my $contents = do { local $/; <$ifh> };
 
-    print "$contents\n$html";
+    print "$contents(N)\n$html";
 }
 
 sub main {
