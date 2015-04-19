@@ -6,6 +6,7 @@ use warnings FATAL => 'all';
 use Data::Dumper;
 use IO::File;
 use Perl::Tidy;
+use Text::MultiMarkdown 'markdown';
 
 my $source_string;
 my $dest_string;
@@ -21,6 +22,11 @@ $argv .= " -nnn";     # line numbers
 ## $argv .= " --spell-check";  # uncomment to trigger an error
 
 my $error;
+my $output;
+
+sub output {
+    $output .= join('',@_);
+}
 
 sub trim {
     $_[0] =~ s{^\s*}{};
@@ -42,7 +48,7 @@ sub function1 {
         if ( m{^\s*<(/)?perl\b([^<]*)>\s*$} ) {
             $end = $1 ? 1 : 0;
             if(0) {
-                print "\n\n{$source_string}\n\n";
+                output "\n\n{$source_string}\n\n";
                 $source_string='';
             }
             elsif($end) {
@@ -58,13 +64,18 @@ sub function1 {
                 if ($error) {
 
                     # serious error in input parameters, no tidied output
-                    print "<<STDERR>>\n$stderr_string\n";
+                    output "<<STDERR>>\n$stderr_string\n";
                     die "Exiting because of serious errors\n";
                 }
 
-                if ($dest_string)      { print "$dest_string\n" }
-#                if ($stderr_string)    { print "<<STDERR>>\n$stderr_string\n" }
-#                if ($errorfile_string) { print "<<.ERR file>>\n$errorfile_string\n" }
+                if ($dest_string) {
+                    $namespace ||= 'new';
+                    $dest_string =~ s{( class=")}{$1$namespace-}g;
+                    $dest_string =~ s{<pre>}{<pre class="$namespace">}g;
+                    output "$dest_string\n";
+                }
+#                if ($stderr_string)    { output "<<STDERR>>\n$stderr_string\n" }
+#                if ($errorfile_string) { output "<<.ERR file>>\n$errorfile_string\n" }
                 $source_string='';
             }
 
@@ -78,10 +89,17 @@ sub function1 {
             $source_string .= "$_\n";
         }
         else {
-            print "$_\n";
+            output "$_\n";
         }
     }
     $ifh->close;
+    my $html = markdown($output);
+
+    $ifh = IO::File->new('full_template', '<');
+    die if (!defined $ifh);
+    my $contents = do { local $/; <$ifh> };
+
+    print "$contents\n$html";
 }
 
 sub main {
@@ -148,4 +166,7 @@ sub timestamp {
 
     return sprintf("%04s%02s%02s%02s%02s%02s",$year,$mon,$mday,$hour,$min,$sec);
 }
+
+
+__END__
 
