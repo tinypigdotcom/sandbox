@@ -41,14 +41,14 @@ sub function1 {
     my $namespace='';
     my $perl_on=0;
     my $control=0;
-    while(<$ifh>) {
-        chomp;
+    while(my $line = <$ifh>) {
+        chomp $line;
         $end=0;
         $control=0;
-        if ( m{^\s*<(/)?perl\b([^<]*)>\s*$} ) {
+        if ( $line =~ m{^\s*<(/)?perl\b([^<]*)>\s*$} ) {
             $end = $1 ? 1 : 0;
             if(0) {
-                output "\n\n{$source_string}\n\n";
+                output("\n\n{$source_string}\n\n");
                 $source_string='';
             }
             elsif($end) {
@@ -64,7 +64,7 @@ sub function1 {
                 if ($error) {
 
                     # serious error in input parameters, no tidied output
-                    output "<<STDERR>>\n$stderr_string\n";
+                    output("<<STDERR>>\n$stderr_string\n");
                     die "Exiting because of serious errors\n";
                 }
 
@@ -72,7 +72,7 @@ sub function1 {
                     $namespace ||= 'new';
                     $dest_string =~ s{( class=")}{$1$namespace-}g;
                     $dest_string =~ s{<pre>}{<pre class="$namespace">}g;
-                    output "$dest_string(N)\n";
+                    output($dest_string);
                 }
 #                if ($stderr_string)    { output "<<STDERR>>\n$stderr_string\n" }
 #                if ($errorfile_string) { output "<<.ERR file>>\n$errorfile_string\n" }
@@ -86,20 +86,21 @@ sub function1 {
         }
         next if $control;
         if ($perl_on) {
-            $source_string .= "$_(N)\n";
+            $source_string .= "${line}\n";
         }
         else {
-            output "$_(N)\n";
+            output("$line\n") if $line;
         }
     }
     $ifh->close;
     my $html = markdown($output);
+#    $html =~ s{>\n\n}{>\n}g;
 
     $ifh = IO::File->new('full_template', '<');
     die if (!defined $ifh);
     my $contents = do { local $/; <$ifh> };
 
-    print "$contents(N)\n$html";
+    print "$contents$html";
 }
 
 sub main {
@@ -166,7 +167,4 @@ sub timestamp {
 
     return sprintf("%04s%02s%02s%02s%02s%02s",$year,$mon,$mday,$hour,$min,$sec);
 }
-
-
-__END__
 
