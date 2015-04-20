@@ -3,22 +3,14 @@ body style='color:#000000; background:#ffffff; '>
 
 
 span style='color:#575757; font-weight:bold; '>      .k  { color: #8B008B; font-weight:bold;} /* keyword */
-NONE                                                 .m  { color: #FF0000; font-weight:bold;} /* subroutine */
+span style='color:#555555; '>                        .m  { color: #FF0000; font-weight:bold;} /* subroutine (none) */
 span style='color:#555555; '>                        .s  { color: #000000;} /* structure */
 span style='color:#696969; '>                        .c  { color: #228B22;} /* comment */
 span style='color:#555555; '>                        .cm { color: #000000;} /* comma */
-UNKNOWN                                              .co { color: #000000;} /* colon */
-UNKNOWN                                              .h  { color: #CD5555; font-weight:bold;} /* here-doc-target */
-UNKNOWN                                              .hh { color: #CD5555; font-style:italic;} /* here-doc-text */
-NONE                                                 .i  { color: #00688B;} /* identifier */
-UNKNOWN                                              .j  { color: #CD5555; font-weight:bold;} /* label */
+span style='color:#555555; '>                        .i  { color: #00688B;} /* identifier (none) */
 span style='color:#2e2e2e; '>                        .n  { color: #B452CD;} /* numeric */
-UNKNOWN                                              .p  { color: #000000;} /* paren */
-UNKNOWN                                              .pd { color: #228B22; font-style:italic;} /* pod-text */
-UNKNOWN                                              .pu { color: #000000;} /* punctuation */
 span style='color:#4c4c4c; '>                        .q  { color: #CD5555;} /* quote */
 span style='color:#555555; '>                        .sc { color: #000000;} /* semicolon */
-UNKNOWN                                              .v  { color: #B452CD;} /* v-string */
 span style='color:#8e8e8e; font-weight:bold; '>      .w  { color: #000000;} /* bareword */
 span style='color:#2a2a2a; '>                        NONE
 span style='color:#afafaf; '>                        POD which doesn't work with perltidy

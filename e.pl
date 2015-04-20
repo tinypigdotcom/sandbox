@@ -72,6 +72,7 @@ sub function1 {
                     $namespace ||= 'new';
                     $dest_string =~ s{( class=")}{$1$namespace-}g;
                     $dest_string =~ s{<pre>}{<pre class="$namespace">}g;
+                    $dest_string =~ s{^(\s*\d+)}{<span class="num">$1.</span>}gm;
                     output($dest_string);
                 }
 #                if ($stderr_string)    { output "<<STDERR>>\n$stderr_string\n" }

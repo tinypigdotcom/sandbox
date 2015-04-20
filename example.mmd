@@ -1,7 +1,7 @@
 The *first* thing I did is to delete the first of this pair of lines, which was redundant, because the line that follows also checks the format of the input:
 
 <perl old>
-*die* unless $input =~ /d/;
+die unless $input =~ /d/;
 if ( $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/ ) {
 </perl>
 

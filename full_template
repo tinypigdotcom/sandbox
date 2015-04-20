@@ -13,6 +13,21 @@ body {
     color: #000000;
     font-size: .8em;
 }
+
+ol {
+    background-color: #D8D8D8;
+    color: #3F3F3F;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+ol li {
+    background: none repeat scroll 0% 0% #EED;
+    padding-left: 5px;
+    color: #262626;
+    padding-bottom: 2px;
+}
+
 pre {
     color: #000000;
     width: 95%;
@@ -32,9 +47,11 @@ pre.new {
     }
 
 pre.old {
-      background: #EEEEFF;
+      background: #F9F9F9;
       border: double #999999;
     }
+
+.num { color: #3F3F3F;}
 
 .new-c  { color: #228B22;}                    /* comment */
 .new-cm { color: #000000;}                    /* comma */
@@ -55,25 +72,26 @@ pre.old {
 .new-v  { color: #B452CD;}                    /* v-string */
 .new-w  { color: #000000;}                    /* bareword */
 
-.old-c  { color: #228B22;}                    /* comment */
-.old-cm { color: #000000;}                    /* comma */
-.old-co { color: #000000;}                    /* colon */
-.old-h  { color: #CD5555; font-weight:bold;}  /* here-doc-target */
-.old-hh { color: #CD5555; font-style:italic;} /* here-doc-text */
-.old-i  { color: #00688B;}                    /* identifier */
-.old-j  { color: #CD5555; font-weight:bold;}  /* label */
-.old-k  { color: #8B008B; font-weight:bold;}  /* keyword */
-.old-m  { color: #FF0000; font-weight:bold;}  /* subroutine */
-.old-n  { color: #B452CD;}                    /* numeric */
-.old-p  { color: #000000;}                    /* paren */
-.old-pd { color: #228B22; font-style:italic;} /* pod-text */
-.old-pu { color: #000000;}                    /* punctuation */
-.old-q  { color: #CD5555;}                    /* quote */
-.old-s  { color: #000000;}                    /* structure */
-.old-sc { color: #000000;}                    /* semicolon */
-.old-v  { color: #B452CD;}                    /* v-string */
-.old-w  { color: #000000;}                    /* bareword */
+.old-c  { color:#696969; }                      /* comment */
+.old-cm { color:#555555; }                      /* comma */
+.old-co { color:#555555; }                      /* colon */
+.old-h  { color:#adadad; background:#ffffff; }  /* here-doc-target */
+.old-hh { color:#4c4c4c; }                      /* here-doc-text */
+.old-i  { color:#555555; }                      /* identifier (none) */
+.old-j  { color:#adadad; }                      /* label */
+.old-k  { color:#575757; font-weight:bold; }    /* keyword */
+.old-m  { color:#555555; }                      /* subroutine (none) */
+.old-n  { color:#2e2e2e; }                      /* numeric */
+.old-p  { color:#696969; }                      /* paren (?) */
+.old-pd { color:#696969; }                      /* pod-text (?) */
+.old-pu { color:#696969; }                      /* punctuation (?) */
+.old-q  { color:#4c4c4c; }                      /* quote */
+.old-s  { color:#555555; }                      /* structure */
+.old-sc { color:#555555; }                      /* semicolon */
+.old-v  { color:#4c4c4c; }                      /* v-string */
+.old-w  { color:#8e8e8e; font-weight:bold; }    /* bareword */
 -->
 </style>
 <div class="separator" style="clear: both; text-align: center;">
 <a href="http://4.bp.blogspot.com/-yk3wHWljkZI/UuceA7HSl3I/AAAAAAAAAGc/AASfFrB0WKM/s1600/pig.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-yk3wHWljkZI/UuceA7HSl3I/AAAAAAAAAGc/AASfFrB0WKM/s1600/pig.png" /></a></div>
+
