@@ -17,6 +17,7 @@ $argv .= " -pbp";     # Format according to perl best practices
 $argv .= " -nst";     # Must turn off -st in case -pbp is specified
 $argv .= " -se";      # -se appends the errorfile to stderr
 $argv .= " -html";    # -se appends the errorfile to stderr
+$argv .= " -ntoc";    # -se appends the errorfile to stderr
 $argv .= " -pre";     # <pre> section only
 $argv .= " -nnn";     # line numbers
 ## $argv .= " --spell-check";  # uncomment to trigger an error
@@ -70,9 +71,12 @@ sub function1 {
 
                 if ($dest_string) {
                     $namespace ||= 'new';
-                    $dest_string =~ s{( class=")}{$1$namespace-}g;
-                    $dest_string =~ s{<pre>}{<pre class="$namespace">}g;
-                    $dest_string =~ s{^(\s*\d+)}{<span class="num">$1.</span>}gm;
+                    for ($dest_string) {
+                        s{( class=")}{$1$namespace-}g;
+                        s{<pre>}{<pre class="$namespace">}g;
+                        s{<a [^>]*>[^<]*</a>}{}g;
+                        s{^(\s*\d+)}{<span class="num">$1.</span>}gm;
+                    }
                     output($dest_string);
                 }
 #                if ($stderr_string)    { output "<<STDERR>>\n$stderr_string\n" }
