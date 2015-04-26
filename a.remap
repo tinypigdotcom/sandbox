@@ -1,0 +1,62 @@
+Default
+Constant : numeric
+Statement : keyword
+Special : quote
+PreProc : comment
+Comment : comment
+Identifier : identifier
+
+comment
+comma
+colon
+here-doc-target
+here-doc-text
+identifier
+label
+keyword
+subroutine
+numeric
+paren
+pod-text
+punctuation
+quote
+structure
+semicolon
+v-string
+bareword
+
+
+
+<!--
+.Default { color: #cccccc; }
+.Constant { color: #ffa0a0; }
+.Statement { color: #ffff00; }
+.Special { color: #ffa500; }
+pre { font-family: monospace; color: #cccccc; background-color: #000000; }
+body { font-family: monospace; color: #cccccc; background-color: #000000; }
+.PreProc { color: #ff80ff; }
+.Comment { color: #80a0ff; }
+.Identifier { color: #40ffff; }
+-->
+
+.num { color: #3F3F3F;}
+
+.new-c  { color: #228B22;}                    /* comment */
+.new-cm { color: #000000;}                    /* comma */
+.new-co { color: #000000;}                    /* colon */
+.new-h  { color: #CD5555; font-weight:bold;}  /* here-doc-target */
+.new-hh { color: #CD5555; font-style:italic;} /* here-doc-text */
+.new-i  { color: #00688B;}                    /* identifier */
+.new-j  { color: #CD5555; font-weight:bold;}  /* label */
+.new-k  { color: #8B008B; font-weight:bold;}  /* keyword */
+.new-m  { color: #FF0000; font-weight:bold;}  /* subroutine */
+.new-n  { color: #B452CD;}                    /* numeric */
+.new-p  { color: #000000;}                    /* paren */
+.new-pd { color: #228B22; font-style:italic;} /* pod-text */
+.new-pu { color: #000000;}                    /* punctuation */
+.new-q  { color: #CD5555;}                    /* quote */
+.new-s  { color: #000000;}                    /* structure */
+.new-sc { color: #000000;}                    /* semicolon */
+.new-v  { color: #B452CD;}                    /* v-string */
+.new-w  { color: #000000;}                    /* bareword */
+
