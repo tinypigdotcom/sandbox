@@ -10,8 +10,9 @@
 
 body {
     background: #FFFFFF;
+    font-family: Georgia;
+    font-size: .9em;
     color: #000000;
-    font-size: 1em;
 }
 
 ol {
@@ -19,6 +20,7 @@ ol {
     color: #3F3F3F;
     margin-top: 0px;
     margin-bottom: 0px;
+    font-size: 0;
 }
 
 ol li {
@@ -26,18 +28,25 @@ ol li {
     padding-left: 5px;
     color: #262626;
     padding-bottom: 2px;
+    font-size: 16px;
+}
+
+.widget .post-body li {
+  margin-bottom: 0px;
 }
 
 pre {
     color: #000000;
     width: 95%;
     background: #EEEFEE;
-    font-family: Roboto;
+    font-size: 1em;
+    font-family: 'Inconsolata', "Lucida Console", Monaco, monospace;
     white-space: pre-wrap;       /* CSS 3 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
     white-space: -pre-wrap;      /* Opera 4-6 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    padding: 3px;
 }
 
 pre.new {
@@ -49,6 +58,12 @@ pre.new {
 pre.old {
       background: #fefefe;
       border: double #999999;
+    }
+
+pre.test {
+      background: #fefefe;
+      border: 1px solid #a1a1a1;
+    padding: 3px;
     }
 
 .num { color: #3F3F3F;}
@@ -92,6 +107,6 @@ pre.old {
 .old-w  { color: #8e8e8e; font-weight:bold; }    /* bareword */
 -->
 </style>
+
 <div class="separator" style="clear: both; text-align: center;">
 <a href="http://4.bp.blogspot.com/-yk3wHWljkZI/UuceA7HSl3I/AAAAAAAAAGc/AASfFrB0WKM/s1600/pig.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-yk3wHWljkZI/UuceA7HSl3I/AAAAAAAAAGc/AASfFrB0WKM/s1600/pig.png" /></a></div>
-
