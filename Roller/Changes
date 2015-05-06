@@ -1,0 +1,6 @@
+Revision history for Perl extension Roller.
+
+0.01  Sat May  2 19:02:11 2015
+	- original version; created by h2xs 1.23 with options
+		-AX Roller
+
