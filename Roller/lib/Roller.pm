@@ -1,6 +1,5 @@
 package Roller;
 
-use 5.014002;
 use strict;
 use warnings;
 
@@ -14,7 +13,6 @@ our @EXPORT = qw( );
 
 our $VERSION = '0.01';
 
-# Preloaded methods go here.
 sub roll {
     my $input = shift;
     return unless $input =~ /(\d*)d(\d+)\s*(\D?)\s*(\d*)/;
@@ -39,24 +37,20 @@ sub roll {
 1;
 __END__
 
-# Below is stub documentation for your module. You'd better edit it!
-
 =head1 NAME
 
-Roller - Perl extension for blah blah blah
+Roller - Perl extension for generating dice rolls from a "dice language"
+string such as "3d6+1".
 
 =head1 SYNOPSIS
 
-  use Roller;
-  blah blah blah
+  use Roller ':all';
+  print roll('d20');
 
 =head1 DESCRIPTION
 
-Stub documentation for Roller, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
+Roller's single function C<roll()> generates dice rolls from a "dice language"
+string such as "3d6+1".
 
 =head2 EXPORT
 
@@ -64,27 +58,16 @@ None by default.
 
 
 
-=head1 SEE ALSO
-
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
-
 =head1 AUTHOR
 
-U-DOGGY\dave, E<lt>dave@x-ray.atE<gt>
+David M. Bradford, E<lt>davembradford@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2015 by U-DOGGY\dave
+Copyright (C) 2015 by David M. Bradford
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.14.2 or,
+it under the same terms as Perl itself, either Perl version 5.20.1 or,
 at your option, any later version of Perl 5 you may have available.
 
 
