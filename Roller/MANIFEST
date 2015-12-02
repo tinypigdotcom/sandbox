@@ -2,5 +2,7 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/Roller.t
+t/01-Roller.t
+t/02-rolls.t
+t/03-rolls.t
 lib/Roller.pm
